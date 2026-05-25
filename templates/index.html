@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WanderAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
-
         :root {
             --sky: #0a1628;
             --ocean: #0d2b4e;
@@ -29,6 +28,7 @@
             font-family: 'DM Sans', sans-serif;
             background: var(--sky);
             min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -92,6 +92,7 @@
             width: 95vw;
             max-width: 520px;
             height: 85vh;
+            height: 85dvh;
             max-height: 700px;
             display: flex;
             flex-direction: column;
@@ -212,6 +213,7 @@
             position: relative;
             white-space: pre-wrap;
             word-break: break-word;
+            text-align: left; /* Ensures bot responses stay perfectly clean */
         }
         @keyframes popIn {
             from { opacity: 0; transform: scale(0.92) translateY(8px); }
@@ -338,16 +340,17 @@
             transform: scale(0.96);
         }
 
-        /* Mobile Adjustments */
+        /* Mobile Phones Viewport Adjustments */
         @media (max-width: 480px) {
             body {
                 padding: 0;
-                align-items: flex-end; /* Locks interface nicely with mobile keyboards */
+                align-items: stretch;
             }
             .container {
                 width: 100vw;
                 height: 100vh;
-                max-height: 100vh;
+                height: 100dvh; /* Adapts cleanly underneath mobile address bars */
+                max-height: 100dvh;
                 border-radius: 0;
                 border: none;
             }
@@ -366,8 +369,12 @@
                 font-size: 14px;
                 padding: 10px 14px;
             }
+            .input-area {
+                padding: 12px 14px pb-safe; /* Ensures extra padding on notched luxury phones */
+                padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+            }
             input[type="text"] {
-                font-size: 16px; /* Critical: Prevents iOS auto-zoom shift when tapping input */
+                font-size: 16px; /* Essential to stop iOS Safari from forcing an awkward page-zoom */
                 padding: 10px 14px;
             }
             button {
@@ -375,10 +382,9 @@
                 height: 40px;
             }
             .plane {
-                display: none; /* Hide decorative floating items on tiny screen layouts */
+                display: none;
             }
         }
-
     </style>
 </head>
 
@@ -407,10 +413,7 @@
         </div>
 
         <div class="chat-box" id="chatBox">
-            <div class="message bot">
-                <div class="bot-label">AI Guide</div>
-                Hello, explorer! 🌟 Ask me about destinations, travel tips, best times to visit, or hidden gems anywhere in the world. ✈️
-            </div>
+            <div class="message bot"><div class="bot-label">AI Guide</div>Hello, explorer! 🌟 Ask me about destinations, travel tips, best times to visit, or hidden gems anywhere in the world. ✈️</div>
         </div>
 
         <div class="input-area">
@@ -419,6 +422,7 @@
                 id="userInput"
                 placeholder="Ask about any destination..."
                 onkeydown="if(event.key==='Enter') sendMessage()"
+                autocomplete="off"
             >
             <button onclick="sendMessage()" title="Send">
                 🚀
@@ -428,7 +432,6 @@
     </div>
 
     <script>
-
         // Generate stars
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 120; i++) {
@@ -474,7 +477,7 @@
             chatBox.appendChild(typingDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Send to Flask backend — connection unchanged
+            // Send to Flask backend
             let response = await fetch("/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -494,7 +497,6 @@
 
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-
     </script>
 
 </body>
