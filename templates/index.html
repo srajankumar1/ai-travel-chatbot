@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="manifest" href="/static/manifest.json">
+    
     <title>WanderAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -28,7 +31,7 @@
             font-family: 'DM Sans', sans-serif;
             background: var(--sky);
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -213,7 +216,7 @@
             position: relative;
             white-space: pre-wrap;
             word-break: break-word;
-            text-align: left; /* Ensures bot responses stay perfectly clean */
+            text-align: left;
         }
         @keyframes popIn {
             from { opacity: 0; transform: scale(0.92) translateY(8px); }
@@ -349,7 +352,7 @@
             .container {
                 width: 100vw;
                 height: 100vh;
-                height: 100dvh; /* Adapts cleanly underneath mobile address bars */
+                height: 100dvh;
                 max-height: 100dvh;
                 border-radius: 0;
                 border: none;
@@ -370,11 +373,11 @@
                 padding: 10px 14px;
             }
             .input-area {
-                padding: 12px 14px pb-safe; /* Ensures extra padding on notched luxury phones */
+                padding: 12px 14px;
                 padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
             }
             input[type="text"] {
-                font-size: 16px; /* Essential to stop iOS Safari from forcing an awkward page-zoom */
+                font-size: 16px;
                 padding: 10px 14px;
             }
             button {
@@ -432,6 +435,13 @@
     </div>
 
     <script>
+        // Register PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js')
+            .then(() => console.log("Service Worker Registered Successfully!"))
+            .catch(err => console.log("Service Worker Registration Failed: ", err));
+        }
+
         // Generate stars
         const starsEl = document.getElementById('stars');
         for (let i = 0; i < 120; i++) {
